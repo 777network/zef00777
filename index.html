@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<title>Simonic Art</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+  /* ===== BASSTILAR FÖR SIDAN ===== */
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background-color: #0c1c3f;
+    color: white;
+  }
+
+  /* ===== MÖRKBLÅ STICKY TOP-BANNER MED LOGGA ===== */
+  .top-blue-bar {
+    position: sticky;
+    top: 0;
+    height: 50px;
+    background-color: #0c1c3f;
+    z-index: 3000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .top-blue-bar img {
+    height: 40px;
+    width: auto;
+  }
+
+  /* ===== VIT STICKY NAVBAR ===== */
+  .navbar {
+    position: sticky;
+    top: 50px; /* Ligger direkt under top-blue-bar */
+    background: white;
+    z-index: 2500;
+    border: 1px solid #ccc;
+    height: 65px;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .nav-logo a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    font-size: 22px;
+  }
+
+  .nav-links a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    font-size: 17px;
+  }
+
+  .hamburger {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: black;
+  }
+
+  /* ===== MOBILMENY ===== */
+  .mobile-menu {
+    position: absolute;
+    top: 115px; /* 50 + 65 */
+    left: 0;
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    background: white;
+    border-top: 1px solid #ccc;
+    padding: 10px 20px;
+    z-index: 2400;
+  }
+
+  .mobile-menu a {
+    padding: 10px 0;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: block; }
+    .mobile-menu.show { display: flex; }
+  }
+
+  /* ===== HEROSEKTION / STARTBILD ===== */
+  .hero {
+    background-image: url('bilder/banner_simonic.gif');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    text-shadow: 0 0 10px black;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    margin: 0;
+  }
+
+  /* ===== GALLERI-SEKTION PÅ FÖRSTASIDAN ===== */
+  .gallery-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+  }
+
+  .card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 6px;
+    background: #e6e6e6;
+    color: black;
+    cursor: pointer; /* Visar att korten är klickbara */
+  }
+
+  .thumbnail {
+    width: 100%;
+    border-radius: 4px;
+  }
+
+  /* ===== KNAPP "SE GALLERI" ===== */
+  .btn {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 12px 25px;
+    border: 2px solid #e6e6e6;
+    background-color: #e6e6e6;
+    color: black;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 5px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .btn:hover {
+    background: white;
+    color: black;
+  }
+
+  /* ===== POPUP FÖR FÖRSTORADE TAVLOR ===== */
+  .popup {
+    display: none;              /* Dölj popup från början */
+    position: fixed;
+    z-index: 9999;              /* Ligger över allt annat */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85); /* Mörk overlay */
+    justify-content: center;
+    align-items: center;
+  }
+
+  .popup-img {
+    max-width: 80%;
+    max-height: 80%;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+  }
+
+  .close {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  /* ===== BOTTOM-BANNER MED QUICK LINKS ===== */
+  .bottom-banner {
+    width: 100%;
+    height: 300px;
+    background-image: url('bilder/bottombanner.gif'); /* Din bakgrundsbild med penslar */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 60px;
+  }
+
+  .bottom-banner-content {
+    color: white;
+    text-shadow: 0 0 8px black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .bottom-banner-content h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .quick-links a {
+    display: block;
+    margin: 3px 0;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+  }
+
+  .quick-links a:hover {
+    text-decoration: underline;
+  }
+
+  .copyright {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 8px;
+  }
+</style>
+</head>
+
+<body>
+
+  <!-- ===== MÖRKBLÅ TOP-BANNER MED LOGGA ===== -->
+  <div class="top-blue-bar">
+    <a href="index.html">
+      <img src="bilder/logostickybanner.gif" alt="Logga">
+    </a>
+  </div>
+
+  <!-- ===== VIT NAVIGATION ===== -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo"><a href="index.html">Simonic Art</a></div>
+
+      <nav class="nav-links">
+        <a href="about.html">Om mig</a>
+        <a href="gallery.html">Galleri</a>
+        <a href="nyhetsbrev.html">Nyhetsbrev</a>
+        <a href="kontakt.html">Kontakt</a>
+      </nav>
+
+      <!-- Hamburgermenyn visas bara på mobil -->
+      <div class="hamburger" onclick="toggleMenu()">☰</div>
+    </div>
+  </header>
+
+  <!-- ===== MOBILMENY ===== -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="about.html">Om mig</a>
+    <a href="gallery.html">Galleri</a>
+    <a href="nyhetsbrev.html">Nyhetsbrev</a>
+    <a href="kontakt.html">Kontakt</a>
+  </div>
+
+  <!-- ===== HEROSEKTION ===== -->
+  <section class="hero">
+    <div>
+      <h1>simonicart</h1>
+      <p>Svensk originalkonst och Keramik</p>
+    </div>
+  </section>
+
+  <!-- ===== GALLERI PÅ FÖRSTASIDAN ===== -->
+  <section class="gallery-section">
+
+    <div class="gallery">
+      <!-- Varje kort öppnar popup med större bild -->
+      <div class="card" onclick="openPopup('bilder/tavla1.gif')">
+        <img src="bilder/tavla1.gif" class="thumbnail" alt="Tavla 1">
+        <h3>Tavla 1</h3>
+        <p>1600×1200 px – Originalverk</p>
+      </div>
+
+      <div class="card" onclick="openPopup('bilder/tavla2.gif')">
+        <img src="bilder/tavla2.gif" class="thumbnail" alt="Tavla 2">
+        <h3>Tavla 2</h3>
+        <p>1600×1200 px – Originalverk</p>
+      </div>
+
+      <div class="card" onclick="openPopup('bilder/tavla3.gif')">
+        <img src="bilder/tavla3.gif" class="thumbnail" alt="Tavla 3">
+        <h3>Tavla 3</h3>
+        <p>1600×1200 px – Originalverk</p>
+      </div>
+
+      <div class="card" onclick="openPopup('bilder/tavla4.gif')">
+        <img src="bilder/tavla4.gif" class="thumbnail" alt="Tavla 4">
+        <h3>Tavla 4</h3>
+        <p>1600×1200 px – Originalverk</p>
+      </div>
+    </div>
+
+    <!-- Stor, tydlig knapp till fullständiga galleriet -->
+    <a href="gallery.html" class="btn">Se galleri</a>
+  </section>
+
+  <!-- ===== BOTTOM-BANNER MED QUICK LINKS & COPYRIGHT ===== -->
+  <div class="bottom-banner">
+    <div class="bottom-banner-content">
+      <h3>Quick links:</h3>
+      <div class="quick-links">
+        <a href="about.html">Om mig</a>
+        <a href="gallery.html">Galleri</a>
+        <a href="nyhetsbrev.html">Nyhetsbrev</a>
+        <a href="kontakt.html">Kontakt</a>
+      </div>
+      <div class="copyright">©2026 Simonic Art</div>
+    </div>
+  </div>
+
+  <!-- ===== POPUP-OVERLAY FÖR FÖRSTORADE TAVLOR ===== -->
+  <div id="popup" class="popup">
+    <!-- X-knapp uppe till höger -->
+    <span class="close" onclick="closePopup()">×</span>
+    <!-- Här laddas den klickade bilden in -->
+    <img id="popup-img" class="popup-img" alt="Förstorad tavla">
+  </div>
+
+  <!-- ===== JAVASCRIPT FÖR POPUP OCH MOBILMENY ===== -->
+  <script>
+    // Öppna popup med vald bild
+    function openPopup(src) {
+      var popupImg = document.getElementById("popup-img");
+      var popup = document.getElementById("popup");
+      popupImg.src = src;            // Sätt bildens källa
+      popup.style.display = "flex";  // Visa popup (flex pga centrering)
+    }
+
+    // Stäng popup
+    function closePopup() {
+      var popup = document.getElementById("popup");
+      popup.style.display = "none";
+    }
+
+    // Öppna/stäng mobilmeny
+    function toggleMenu() {
+      document.getElementById("mobileMenu").classList.toggle("show");
+    }
+  </script>
+
+</body>
+</html>
